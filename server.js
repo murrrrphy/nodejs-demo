@@ -49,7 +49,7 @@ var server = http.createServer(function (request, response) {
     } else {
         response.statusCode = 404
         response.setHeader('Content-Type', 'text/html;charset=utf-8')
-        response.write(`404 NOT FOUND\n你访问的页面不存在`)
+        response.write(`404 NOT FOUND\n你访问的页面不存在\n`)
         response.end()
     }
 
