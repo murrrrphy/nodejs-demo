@@ -27,24 +27,193 @@ var server = http.createServer(function (request, response) {
         response.statusCode = 200
         response.setHeader('Content-Type', 'text/html;charset=utf-8')
         response.write(`
-        <!DOCTYPE html>
-            <head>
-            <link rel="stylesheet" href="/style">
-            </head>
-            <body>
-               <h1>标题</h1>
-               <script src="/js"></script>
-            </body>`)
+        <!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会动的页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        *::before {
+            box-sizing: border-box
+        }
+
+        *::after {
+            box-sizing: border-box
+        }
+
+        #html {
+            word-break: break-all;
+        }
+
+        #div1 {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 400px;
+            height: 400px;
+        }
+
+        #div1::before {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 200px;
+            height: 200px;
+        }
+
+        #div1::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 200px;
+            height: 200px;
+        }
+
+        @keyframes x {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 500px) {
+            #html {
+                height: 50vh;
+                overflow: auto;
+            }
+
+            #div1Wrapper {
+                height: 50vh;
+            }
+
+            #div1 {
+                position: relative;
+                top: 25%;
+                left: 25%;
+                width: 200px;
+                height: 200px;
+            }
+
+            #div1::before {
+                width: 100px;
+                height: 100px;
+            }
+
+            #div1::after {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+<style id="style"></style>
+<div id="html"></div>
+<div id="div1Wrapper">
+    <div id="div1"></div>
+</div>
+<script src="/js"></script>
+</body>
+</html>`)
         response.end()
-    } else if (path === '/style') {
-        response.statusCode = 200
-        response.setHeader('Content-Type', 'text/css;charset=utf-8')
-        response.write(`h1{color: red;}`)
-        response.end()
-    } else if (path === '/js') {
+    }else if (path === '/js') {
         response.statusCode = 200
         response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-        response.write(`console.log("hello")`)
+        response.write(`let html = document.querySelector("#html");
+let style = document.querySelector("#style");
+let string = \`/*你好，我是一名前端工程师
+ *接下来我要展示一下我的前端功底
+ *首先，我要准备一个div
+ **/
+#div1{
+    border: 1px solid red;
+}
+/*接下来我要把div变成一个八卦图
+ *注意看好了
+ *首先，把div变成一个圆
+**/
+#div1{
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.75);
+    border: none;
+}
+/*八卦是阴阳组成的
+ *一黑一白
+**/
+#div1{
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%,
+                rgba(255,255,255,1) 50%, rgba(0,0,0,1) 50%, 
+                rgba(0,0,0,1) 100%);
+}
+/*阴阳衍化出两条阴阳鱼
+ *互相交融
+ *首先是黑色阴阳鱼
+**/
+#div1::before{
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: black;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%,
+                rgba(255,255,255,1) 25%, rgba(0,0,0,1) 25%, 
+                rgba(0,0,0,1) 100%);
+}
+/*然后是白色阴阳鱼**/
+#div1::after{
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, 
+    rgba(18,18,18,1) 25%, rgba(255,255,255,1) 25%, 
+    rgba(255,255,255,1) 100%);
+}
+/*最后，再装个逼
+ *我要让这个八卦转起来
+ **/
+#div1{
+    animation: x 10s infinite linear;    
+}
+/*谢谢观看**/
+\`;
+let string2 = "";
+let n = 0;
+
+let step = () => {
+    setTimeout(() => {
+            if (string[n] === \`\\n\`) {
+                string2 += "<br>"
+            } else if (string[n] === " ") {
+                string2 += "&nbsp;";
+            } else {
+                string2 += string[n];
+            }
+            html.innerHTML = string2;
+            style.innerHTML = string.substring(0, n);
+            window.scrollTo(0, 99999);
+            html.scrollTo(0,99999);
+            if (n < string.length - 1) {
+                n += 1;
+                step();
+            }
+        }, 50
+    )
+}
+
+step();`)
         response.end()
     } else {
         response.statusCode = 404
